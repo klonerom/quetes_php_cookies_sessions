@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+//Sign in ko - redirection to login
+if (!isset($_SESSION['login'])) {
+    $username = 'Wilder';
+} else {
+    $username = $_SESSION['login'];
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,6 +59,6 @@
     </div><!-- /.container-fluid -->
   </nav>
   <div class="container-fluid text-right">
-    <strong>Hello Wilder !</strong>
+    <strong style="color : #7ede7e; font-size: 2rem;">Hello <?= $username ?> !</strong>
   </div>
 </header>
