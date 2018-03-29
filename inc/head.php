@@ -54,6 +54,10 @@ if (!isset($_SESSION['login'])) {
               Cart
             </a>
           </li>
+            <li>
+                <a href="/index.php?logout=1" class="btn btn-warning  navbar-btn">Déconnexion</a>
+
+          </li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

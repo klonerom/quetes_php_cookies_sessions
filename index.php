@@ -6,19 +6,63 @@ if (!isset($_SESSION['login'])) {
     header('Location: login.php');
 }
 
+if (isset($_GET['logout']) && $_GET['logout'] == 1){
+    session_destroy();
+    header('Location: login.php');
+}
+
+
 if (!empty($_GET['add_to_cart'])) {
 
-    $cookie_name = "id_product";
-    $cookie_value = (int) $_GET['add_to_cart'];
-    setcookie($cookie_name, $cookie_value, time() + (10*60), "/");
+    $item = (int)$_GET['add_to_cart'];
 
-    if(!isset($_COOKIE[$cookie_name])) {
-        echo "Cookie named '" . $cookie_name . "' is not set!";
-    } else {
-        echo "Cookie '" . $cookie_name . "' is set!<br>";
-        echo "Value is: " . $_COOKIE[$cookie_name];
+    //init nbOrder
+    if (!isset($nbOrder[$item])) {
+        $nbOrder[$item] = 1;
     }
-    var_dump($_COOKIE);
+
+    //init cookieTabs
+    if (isset($_COOKIE['items'])) {
+        $cookieTabs = unserialize($_COOKIE['items']);
+
+        //possibiles plusieurs produits dans $cookieTabs
+        foreach ($cookieTabs as $cookieTab) {
+            if ($cookieTab['id'] === $item) {
+                $nbOrder[$item] = $cookieTab['quantity']; //init a la valeur du cookie
+                $nbOrder[$item]++;
+                //var_dump($nbOrder[$item]);
+            }
+        }
+    }
+
+    //recuperer le libelle du produit ajouter
+    switch ($item) {
+        case 32 :
+            $nameProduct = "M&M's© cookies";
+            break;
+        case 36 :
+            $nameProduct = "Chocolate chips";
+            break;
+        case 46 :
+            $nameProduct = "Pecan nuts";
+            break;
+        case 58 :
+            $nameProduct = "Chocolate cookie";
+            break;
+        default :
+            $nameProduct = "Produit inconnu";
+            break;
+    }
+
+    //tableau de chaque commande
+    $cookieTabs[$item] = [
+        'id' => $item,
+        'description' => $nameProduct,
+        'quantity' => $nbOrder[$item],
+    ];
+
+    //ecriture dans le cookie
+    setcookie("items", serialize($cookieTabs), time() + (0.5 * 60));
 }
 
 ?>
@@ -33,6 +77,7 @@ if (!empty($_GET['add_to_cart'])) {
           <a  href="?add_to_cart=46" class="btn btn-primary">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add to cart
           </a>
+<!--           <p><span class='glyphicon glyphicon-shopping-cart'> --><?//= $nbOrder['46'] ?><!--</span></p>-->
         </figcaption>
       </figure>
     </div>
