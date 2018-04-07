@@ -51,7 +51,7 @@ if (!isset($_SESSION['login'])) {
           <li>
             <a href="/cart.php" class="btn btn-warning navbar-btn">
               <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
-              Cart
+              Cart <?= empty($_SESSION['nbItemCart']) ? '' : '(' . $_SESSION['nbItemCart'] . ')' ?>
             </a>
           </li>
             <li>

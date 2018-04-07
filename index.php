@@ -4,11 +4,13 @@ require 'inc/head.php';
 //Sign in ko - redirection to login
 if (!isset($_SESSION['login'])) {
     header('Location: login.php');
+    die;
 }
 
 if (isset($_GET['logout']) && $_GET['logout'] == 1){
     session_destroy();
     header('Location: login.php');
+    die;
 }
 
 
@@ -63,7 +65,28 @@ if (!empty($_GET['add_to_cart'])) {
 
     //ecriture dans le cookie
     setcookie("items", serialize($cookieTabs), time() + (0.5 * 60));
+
 }
+
+//Nombre items dans panier
+if (!empty($cookieTabs)) {
+
+    $nbItemCart = 0;
+    foreach ($cookieTabs as $cartItem) {
+
+        if (!empty($cartItem['quantity'])) {
+
+            $nbItemCart += $cartItem['quantity'];
+        }
+    }
+    //pour pouvoir utiliser l info dans les autres page (via le header)
+    $_SESSION['nbItemCart'] = $nbItemCart;
+
+    header('Location: index.php');
+    die;
+
+}
+
 
 ?>
 <section class="cookies container-fluid">
